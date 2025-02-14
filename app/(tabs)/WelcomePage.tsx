@@ -7,7 +7,6 @@ const WelcomePage = () => {
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Welcome!</Text>
       <Text style={styles.pikaName}>Enter your PikaName</Text>
-      <TextInput style={styles.textofname}></TextInput>
     </View>
   );
 };
