@@ -1,31 +1,82 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+
+interface User {
+  id: number;
+  username: string;
+  distance: number;
+}
 
 const NearbyUser = () => {
-  interface User {
-    id: number;
-    username: string;
-    distance: number;
-  }
-
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const router = useRouter();
+  const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchNearbyUsers = async () => {
+    const checkAuthentication = async () => {
       try {
-        const response = await fetch('http://192.168.56.1:4000/nearby-users/3'); // Replace with actual userId
+        const storedUserId = await AsyncStorage.getItem('userId');
+        const token = await AsyncStorage.getItem('token');
+
+        if (!storedUserId || !token) {
+          Alert.alert('Authentication Required', 'Please login to continue');
+          router.replace('/LoginPage');
+          return;
+        }
+
+        const userId = parseInt(storedUserId, 10);
+        setCurrentUserId(userId);
+        fetchNearbyUsers(userId);
+      } catch (error) {
+        console.error('Authentication check failed:', error);
+        router.replace('/LoginPage');
+      }
+    };
+
+    const fetchNearbyUsers = async (userId: number) => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch(`http://192.168.56.1:4000/nearby-users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            router.replace('/LoginPage');
+            return;
+          }
+          throw new Error('Failed to fetch nearby users');
+        }
+
         const data = await response.json();
         setUsers(data);
       } catch (error) {
+        Alert.alert('Error', 'Failed to fetch nearby users');
         console.error('Error fetching nearby users:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchNearbyUsers();
+    checkAuthentication();
   }, []);
+
+  const handleChatPress = async (receiverId: number) => {
+    try {
+      await AsyncStorage.setItem('receiverId', receiverId.toString());
+      navigation.navigate('ChatUi');
+    } catch (error) {
+      console.error('Error navigating to chat:', error);
+      Alert.alert('Error', 'Failed to navigate to chat');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -40,10 +91,12 @@ const NearbyUser = () => {
             <View style={styles.pikaNameContainer}>
               <Text style={styles.pikaName}>{item.username}</Text>
               <View style={styles.userInfo}>
-                <Image
-                  source={require('../../assets/images/icons8-chat-24.png')}
-                  style={styles.icon}
-                />
+                <TouchableOpacity onPress={() => handleChatPress(item.id)}>
+                  <Image
+                    source={require('../../assets/images/icons8-chat-24.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
                 <Text style={styles.pikaName}>{item.distance.toFixed(2)} km away</Text>
               </View>
             </View>
@@ -61,49 +114,45 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F0F4F8', 
+    backgroundColor: '#F0F4F8',
     width: '100%',
   },
   welcomeText: {
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#333', 
-  },
-  FlatList: {
-    width: '100%',
+    color: '#333',
   },
   pikaNameContainer: {
+    width: '90%',
     marginVertical: 8,
     padding: 5,
     borderRadius: 12,
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, 
-    alignSelf: 'stretch',
+    elevation: 3,
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   pikaName: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#444', 
+    color: '#444',
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
   },
   icon: {
     width: 22,
     height: 22,
     marginRight: 8,
-    tintColor: '#007AFF', 
+    tintColor: '#007AFF',
   },
 });
-
 
 export default NearbyUser;
