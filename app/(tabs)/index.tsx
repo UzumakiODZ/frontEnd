@@ -1,24 +1,10 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import LoginPage from './LoginPage'; 
-import WelcomePage from './WelcomePage';
-import NearbyUser from './NearbyUser';
-import ChatUi from './ChatUi';
+import React from "react";
+import { View, Text } from "react-native";
 
-const Stack = createStackNavigator();
-
-const App = () => {
+export default function HomeScreen() {
   return (
-   
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="Welcome" component={WelcomePage} />
-        <Stack.Screen name="NearbyUsers" component={NearbyUser} />
-        <Stack.Screen name = "ChatUi" component = {ChatUi} />
-      </Stack.Navigator>
-   
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Home Screen (will redirect if needed)</Text>
+    </View>
   );
-};
-
-export default App;
+}

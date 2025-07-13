@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
 
 interface User {
   id: number;
@@ -15,7 +14,6 @@ const NearbyUser = () => {
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const router = useRouter();
-  const navigation = useNavigation();
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -71,7 +69,7 @@ const NearbyUser = () => {
   const handleChatPress = async (receiverId: number) => {
     try {
       await AsyncStorage.setItem('receiverId', receiverId.toString());
-      navigation.navigate('ChatUi');
+      router.push('/ChatUi'); // Use Expo Router navigation
     } catch (error) {
       console.error('Error navigating to chat:', error);
       Alert.alert('Error', 'Failed to navigate to chat');

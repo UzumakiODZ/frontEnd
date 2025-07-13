@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WelcomePage = () => {
   const [username, setUsername] = useState('');
-  const navigation = useNavigation(); 
+  const router = useRouter();
+
   const handleContinue = async () => {
     try {
       if (username.trim()) {
         await AsyncStorage.setItem('username', username);
-        navigation.navigate('NearbyUser'); 
+        router.push('/NearbyUser'); // Use Expo Router navigation
+      } else {
+        Alert.alert('Validation Error', 'Please enter your PikaName!');
       }
     } catch (error) {
       console.error('Error saving username:', error);
+      Alert.alert('Error', 'Failed to save your name. Please try again.');
     }
   };
 
@@ -27,6 +31,7 @@ const WelcomePage = () => {
         onChangeText={setUsername}
         placeholder="Enter your name"
         placeholderTextColor="#666"
+        autoCapitalize="words"
       />
       <TouchableOpacity 
         style={styles.button}
