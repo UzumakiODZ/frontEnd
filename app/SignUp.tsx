@@ -55,7 +55,7 @@ const SignUpPage = () => {
       Alert.alert(
         'Registration Successful',
         'You can now log in with your credentials.',
-        [{ text: 'OK', onPress: () => router.push('/LoginPage') }]
+        [{ text: 'OK', onPress: () => router.replace('/WelcomePage') }]
       );
     } catch (error) {
       console.error('Registration error:', error);

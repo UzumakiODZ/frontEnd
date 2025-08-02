@@ -25,18 +25,32 @@ export default function RootLayout() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      setIsLoggedIn(!!token);
-      setAuthChecked(true);
-       if (!token && pathname !== '/WelcomePage' && pathname !== '/LoginPage') {
-        router.replace('/SignUp'); 
-      } else if (token && (pathname === '/WelcomePage' || pathname === '/LoginPage')) {
-        router.replace('/'); 
+  const checkAuth = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const isLoggedIn = !!token;
+
+    setIsLoggedIn(isLoggedIn);
+    setAuthChecked(true);
+
+    if (!isLoggedIn) {
+      if (pathname !== '/LoginPage' && pathname !== '/SignUp') {
+        router.replace('/LoginPage');
       }
-    };
-    checkAuth();
-  }, [pathname, router]);
+    } else {
+      if (pathname === '/SignUp') {
+        router.replace('/WelcomePage');
+      } else if (
+        pathname === '/LoginPage' ||
+        pathname === '/WelcomePage'
+      ) {
+        router.replace('/(tabs)/NearbyUser');
+      }
+    }
+  };
+
+  checkAuth();
+}, [pathname, router]);
+
 
   useEffect(() => {
     if (loaded && authChecked) {
@@ -45,7 +59,7 @@ export default function RootLayout() {
   }, [loaded, authChecked]);
 
   if (!loaded || !authChecked) {
-    return null; // Or a loading spinner
+    return null; 
   }
 
   return (

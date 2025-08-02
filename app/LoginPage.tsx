@@ -51,7 +51,7 @@ const LoginPage = () => {
         throw new Error('Failed to update location');
       }
 
-      router.push('/NearbyUser'); // Use Expo Router navigation after location update
+      router.replace('/(tabs)/NearbyUser'); // Use Expo Router navigation after location update
     } catch (error) {
       console.error('Location error:', error);
       Alert.alert('Error', 'Failed to update location. Please try again.');
@@ -84,7 +84,7 @@ const LoginPage = () => {
       // Request location permission after login
       const hasPermission = await requestLocationPermission();
       if (hasPermission) fetchLocation();
-      else router.push('/NearbyUser'); // Remove (tabs) from path
+      else router.replace('/(tabs)/NearbyUser'); 
 
     } catch (error) {
       console.error('Login error:', error);
