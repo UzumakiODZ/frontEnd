@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useRouter, usePathname } from 'expo-router';
+import { Slot, useRouter, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
@@ -26,16 +26,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // Replace this with your real auth logic!
       const token = await AsyncStorage.getItem('userToken');
       setIsLoggedIn(!!token);
       setAuthChecked(true);
-
-      // Redirect logic
-      if (!token && pathname !== '/(tabs)/LoginPage') {
-        router.replace('/(tabs)/LoginPage');
-      } else if (token && pathname === '/(tabs)/LoginPage') {
-        router.replace('/(tabs)/WelcomePage');
+       if (!token && pathname !== '/WelcomePage' && pathname !== '/LoginPage') {
+        router.replace('/SignUp'); 
+      } else if (token && (pathname === '/WelcomePage' || pathname === '/LoginPage')) {
+        router.replace('/'); 
       }
     };
     checkAuth();
@@ -53,10 +50,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <Slot />
       <StatusBar style="auto" />
     </ThemeProvider>
   );

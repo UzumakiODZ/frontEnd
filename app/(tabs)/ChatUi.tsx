@@ -137,7 +137,7 @@ const ChatUi = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E5DDD5', // WhatsApp background
+    backgroundColor: '#E5DDD5', 
   },
   messagesList: {
     padding: 10,

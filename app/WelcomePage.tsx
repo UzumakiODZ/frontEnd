@@ -11,7 +11,7 @@ const WelcomePage = () => {
     try {
       if (username.trim()) {
         await AsyncStorage.setItem('username', username);
-        router.push('/NearbyUser'); // Use Expo Router navigation
+        router.push('/NearbyUser'); 
       } else {
         Alert.alert('Validation Error', 'Please enter your PikaName!');
       }
