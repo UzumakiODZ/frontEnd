@@ -3,16 +3,13 @@ import { StyleSheet, TextInput, View, Text, TouchableOpacity, Alert } from 'reac
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Use an environment variable for API URL
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.56.1:4000';
+import { BASE_URL } from './config';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  // Function to request location permissions
   const requestLocationPermission = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -23,7 +20,6 @@ const LoginPage = () => {
     }
   };
 
-  // Function to fetch and update user location
   const fetchLocation = async () => {
     try {
       const location = await Location.getCurrentPositionAsync({
@@ -38,7 +34,7 @@ const LoginPage = () => {
         throw new Error('User not authenticated');
       }
 
-      const response = await fetch(`${API_BASE_URL}/update-location`, {
+      const response = await fetch(`${BASE_URL}/update-location`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +57,7 @@ const LoginPage = () => {
   // Function to handle user login
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,11 +73,9 @@ const LoginPage = () => {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Store user credentials securely
       await AsyncStorage.setItem('userId', data.userId.toString());
       await AsyncStorage.setItem('token', data.token);
 
-      // Request location permission after login
       const hasPermission = await requestLocationPermission();
       if (hasPermission) fetchLocation();
       else router.replace('/(tabs)/NearbyUser'); 

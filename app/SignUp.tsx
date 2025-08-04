@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { BASE_URL } from './config';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ const SignUpPage = () => {
 
     try {
       setLoading(true);
-      const response = await fetch('http://192.168.56.1:4000/register', {
+      const response = await fetch(`${BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { BASE_URL } from '../config';
 
 interface User {
   id: number;
@@ -39,7 +40,7 @@ const NearbyUser = () => {
     const fetchNearbyUsers = async (userId: number) => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch(`http://192.168.56.1:4000/nearby-users/${userId}`, {
+        const response = await fetch(`${BASE_URL}/nearby-users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           }
@@ -69,7 +70,7 @@ const NearbyUser = () => {
   const handleChatPress = async (receiverId: number) => {
     try {
       await AsyncStorage.setItem('receiverId', receiverId.toString());
-      router.push('/ChatUi'); // Use Expo Router navigation
+      router.push('/ChatUi'); 
     } catch (error) {
       console.error('Error navigating to chat:', error);
       Alert.alert('Error', 'Failed to navigate to chat');
@@ -83,6 +84,7 @@ const NearbyUser = () => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : users.length > 0 ? (
         <FlatList
+          style={{ width: '90%' }}
           data={users}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
@@ -122,10 +124,10 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   pikaNameContainer: {
-    width: '90%',
+    width: '100%',
     marginVertical: 8,
-    padding: 5,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 15,
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
@@ -133,6 +135,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -142,6 +145,8 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   userInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
   },

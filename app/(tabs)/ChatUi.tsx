@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, Alert, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { io, Socket } from 'socket.io-client';
+import { useRouter } from 'expo-router';
+import { BASE_URL } from '../config';
 
 interface Message {
   id: number;
@@ -18,6 +20,7 @@ const ChatUi = () => {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [receiverId, setReceiverId] = useState<number | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const initChat = async () => {
@@ -35,7 +38,7 @@ const ChatUi = () => {
           fetchMessages(parsedUserId, parsedReceiverId);
 
           // Initialize Socket.io
-          const newSocket = io('http://192.168.56.1:4000', {
+          const newSocket = io(BASE_URL, {
             transports: ['websocket'],
             autoConnect: true
           });
@@ -68,11 +71,22 @@ const ChatUi = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const onBackPress = () => {
+      router.replace('/NearbyUser');
+      return true;
+    };
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  }, [router]);
+
   const fetchMessages = async (senderId: number, receiverId: number) => {
     try {
       const token = await AsyncStorage.getItem('token');
       const response = await fetch(
-        `http://192.168.56.1:4000/messages?senderId=${senderId}&receiverId=${receiverId}`,
+        `${BASE_URL}/messages?senderId=${senderId}&receiverId=${receiverId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -99,14 +113,13 @@ const ChatUi = () => {
     if (newMessage.trim() && currentUserId && receiverId && socket) {
       const token = await AsyncStorage.getItem('token');
 
-      // Emit message through socket
+      
       socket.emit('sendMessage', {
         token,
         receiverId,
         content: newMessage.trim(),
       });
 
-      // Only clear the input, do not optimistically add the message
       setNewMessage('');
     }
   };
