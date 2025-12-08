@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, TextInput, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { BASE_URL } from './config';
 
@@ -67,7 +68,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <Text style={styles.title}>Sign Up</Text>
       <TextInput
         style={styles.input}
@@ -118,7 +119,7 @@ const SignUpPage = () => {
       >
         <Text style={styles.loginText}>Already have an account? Log In</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image, TouchableOp
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { BASE_URL } from '../config';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface User {
   id: number;
@@ -78,34 +79,34 @@ const NearbyUser = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcomeText}>Nearby Users</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : users.length > 0 ? (
-        <FlatList
-          style={{ width: '90%' }}
-          data={users}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.pikaNameContainer}>
-              <Text style={styles.pikaName}>{item.username}</Text>
-              <View style={styles.userInfo}>
-                <TouchableOpacity onPress={() => handleChatPress(item.id)}>
-                  <Image
-                    source={require('../../assets/images/icons8-chat-24.png')}
-                    style={styles.icon}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.pikaName}>{item.distance.toFixed(2)} km away</Text>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.welcomeText}>Nearby Users</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : users.length > 0 ? (
+          <FlatList
+            style={{ width: '90%' }}
+            data={users}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.pikaNameContainer}>
+                <Text style={styles.pikaName}>{item.username}</Text>
+                <View style={styles.userInfo}>
+                  <TouchableOpacity onPress={() => handleChatPress(item.id)}>
+                    <Image
+                      source={require('../../assets/images/icons8-chat-24.png')}
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.pikaName}>{item.distance.toFixed(2)} km away</Text>
+                </View>
               </View>
-            </View>
-          )}
-        />
-      ) : (
-        <Text style={styles.pikaName}>No nearby users found</Text>
-      )}
-    </View>
+            )}
+          />
+        ) : (
+          <Text style={styles.pikaName}>No nearby users found</Text>
+        )}
+    </SafeAreaView>
   );
 };
 

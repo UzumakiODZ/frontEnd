@@ -41,7 +41,8 @@ export default function RootLayout() {
         router.replace('/WelcomePage');
       } else if (
         pathname === '/LoginPage' ||
-        pathname === '/WelcomePage'
+        pathname === '/WelcomePage' ||
+        pathname === '/'
       ) {
         router.replace('/(tabs)/NearbyUser');
       }
