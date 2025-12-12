@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "147304496550",
+    "project_id": "nearchat-5fa73",
+    "storage_bucket": "nearchat-5fa73.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147304496550:android:2a7d6c89ab99c592612367",
+        "android_client_info": {
+          "package_name": "com.anonymous.frontEnd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4ifPg-mS-NwnBfWLxOxZDCHrZVHHG5CU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

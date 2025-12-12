@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NotificationHandler from './(tabs)/NotificationHandler';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -65,6 +66,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <NotificationHandler />
       <Slot />
       <StatusBar style="auto" />
     </ThemeProvider>

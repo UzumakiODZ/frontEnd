@@ -32,6 +32,7 @@ const NearbyUser = () => {
         const userId = parseInt(storedUserId, 10);
         setCurrentUserId(userId);
         fetchNearbyUsers(userId);
+        console.log(userId);
       } catch (error) {
         console.error('Authentication check failed:', error);
         router.replace('/LoginPage');
@@ -41,6 +42,7 @@ const NearbyUser = () => {
     const fetchNearbyUsers = async (userId: number) => {
       try {
         const token = await AsyncStorage.getItem('token');
+        console.log(token);
         const response = await fetch(`${BASE_URL}/nearby-users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,

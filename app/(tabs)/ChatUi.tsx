@@ -33,7 +33,8 @@ const ChatUi = () => {
         if (userId && receiver && token) {
           const parsedUserId = parseInt(userId);
           const parsedReceiverId = parseInt(receiver);
-
+          console.log('Parsed User ID:', parsedUserId);
+          console.log('Parsed Receiver ID:', parsedReceiverId);
           setCurrentUserId(parsedUserId);
           setReceiverId(parsedReceiverId);
           fetchMessages(parsedUserId, parsedReceiverId);
@@ -121,6 +122,8 @@ const ChatUi = () => {
         content: newMessage.trim(),
       });
 
+      console.log('Sending message:', { receiverId, content: newMessage.trim()});
+
       setNewMessage('');
     }
   };
@@ -145,7 +148,8 @@ const ChatUi = () => {
     
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={messages}
+          inverted
+          data={[...messages].reverse()}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.messagesList}
