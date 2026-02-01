@@ -1,18 +1,23 @@
-# frontEnd
+# NearChat
 
-A modern frontend application built primarily with TypeScript, with supporting code in Kotlin and JavaScript.
+Have you ever gone alone to a concert, club, restraunt and wished you could connect with people nearby? Did you ever want to approach a nearby person but could not think of any way to? Nearchat brings a soultion to all that where you can find people near your location and chat with them. 
 
 ## Features
 
-- Robust and type-safe codebase using TypeScript
-- Modular design for scalability and maintainability
-- Integration with APIs and backend services
+- Uses geolocation to show nearby users.
+- Utilises Socket.io of websocket connection and instantaneous message updates on chat screen.
+- Uses expo push notification to send new messages directly to your notification pannel when you are offline. 
 
 ## Tech Stack
 
-- TypeScript (85.7%)
-- Kotlin (9%)
-- JavaScript (5.3%)
+- React Native
+- Express
+- PostgreSQL
+- Prisma ORM
+
+## APK Link
+
+https://expo.dev/accounts/bigshow67/projects/frontEnd/builds/74438683-66ea-469f-9e51-d1f0b375b7b4  
 
 ## Getting Started
 
